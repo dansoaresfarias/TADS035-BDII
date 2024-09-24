@@ -1,3 +1,5 @@
+-- DML: INSERT
+
 insert into cliente (cpf, nome, sexo, email, telefone, dataNasc)
 	value ("321.654.789-00", "Patrícia Oliveira", 'F', 
 		"patricia.oliveira@bol.com", "81981907665", "1990-12-14");
@@ -80,4 +82,74 @@ VALUES
     ("555.555.789-10", "PE", "Recife", "Espinheiro", "Rua Quarenta e Oito", 987, "Apt 303", "52020-010"),
     ("666.666.789-10", "PE", "Olinda", "Varadouro", "Avenida Presidente Kennedy", 123, "", "53110-200"),
     ("777.777.789-10", "PE", "Recife", "Pina", "Rua da Moeda", 56, "Apt 202", "51011-020");
+
+-- DML: UPDATE
+
+update cliente
+	set telefone = "81999991771"
+		where cpf = "132.654.789-10";
+
+select * from cliente;
+
+update cliente
+	set nome = "Deyvid Oliveira",
+		email = "deyvid.oliveira@gmail.com",
+        sexo = 'X'
+			where cpf = "112.654.789-10";
+
+alter table cliente 
+	add column idade int null;
+    
+alter table cliente 
+	add column pontuacao int null;
+
+SET SQL_SAFE_UPDATES = 0;
+
+select * from cliente;
+
+update cliente
+	set pontuacao = 100
+		where sexo = 'F';
+        
+update cliente
+	set pontuacao = 50
+		where sexo = 'M';
+
+update cliente
+	set pontuacao = 300
+		where sexo = 'X';
+        
+update cliente
+	set pontuacao = pontuacao * 1.3
+		where nome like "%Oliveira";
+
+select * from cliente
+	where nome like "%Oliveira";
+
+update cliente
+	set pontuacao = pontuacao + 50
+		where sexo = 'F';
+        
+update cliente
+	set idade = 0;
+
+select now();
+
+update cliente
+	set idade = year(now()) - year(dataNasc);
+
+update cliente
+	set idade = timestampdiff(year, dataNasc, now());
+
+-- DML: DELETE
+
+delete from cliente
+	where cpf = "112.654.789-10";
+    
+delete from cliente
+	where sexo = 'M';
+    
+delete from cliente;
+
+
 
