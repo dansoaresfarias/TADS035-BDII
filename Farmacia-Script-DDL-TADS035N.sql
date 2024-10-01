@@ -8,19 +8,19 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- Schema mydb
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- Schema FarmarciaTADS035N
+-- Schema FarmaciaTADS035N
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema FarmarciaTADS035N
+-- Schema FarmaciaTADS035N
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `FarmarciaTADS035N` DEFAULT CHARACTER SET utf8mb3 ;
-USE `FarmarciaTADS035N` ;
+CREATE SCHEMA IF NOT EXISTS `FarmaciaTADS035N` DEFAULT CHARACTER SET utf8mb3 ;
+USE `FarmaciaTADS035N` ;
 
 -- -----------------------------------------------------
--- Table `FarmarciaTADS035N`.`Cargo`
+-- Table `FarmaciaTADS035N`.`Cargo`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`Cargo` (
+CREATE TABLE IF NOT EXISTS `FarmaciaTADS035N`.`Cargo` (
   `cbo` INT(11) NOT NULL,
   `nome` VARCHAR(45) NOT NULL,
   `faixaSalario` DECIMAL(7,2) UNSIGNED ZEROFILL NOT NULL,
@@ -30,9 +30,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `FarmarciaTADS035N`.`Cliente`
+-- Table `FarmaciaTADS035N`.`Cliente`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`Cliente` (
+CREATE TABLE IF NOT EXISTS `FarmaciaTADS035N`.`Cliente` (
   `cpf` VARCHAR(14) NOT NULL,
   `nome` VARCHAR(45) NOT NULL,
   `sexo` CHAR(1) NOT NULL,
@@ -47,9 +47,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `FarmarciaTADS035N`.`Fornecedor`
+-- Table `FarmaciaTADS035N`.`Fornecedor`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`Fornecedor` (
+CREATE TABLE IF NOT EXISTS `FarmaciaTADS035N`.`Fornecedor` (
   `cnpj` VARCHAR(18) NOT NULL,
   `nome` VARCHAR(45) NOT NULL,
   `email` VARCHAR(45) NOT NULL,
@@ -60,9 +60,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `FarmarciaTADS035N`.`Compras`
+-- Table `FarmaciaTADS035N`.`Compras`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`Compras` (
+CREATE TABLE IF NOT EXISTS `FarmaciaTADS035N`.`Compras` (
   `idCompras` INT(11) NOT NULL AUTO_INCREMENT,
   `cupomFiscal` VARCHAR(45) NOT NULL,
   `dataComp` DATETIME NOT NULL,
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`Compras` (
   INDEX `fk_Compras_Fornecedor1_idx` (`Fornecedor_cnpj` ASC) VISIBLE,
   CONSTRAINT `fk_Compras_Fornecedor1`
     FOREIGN KEY (`Fornecedor_cnpj`)
-    REFERENCES `FarmarciaTADS035N`.`Fornecedor` (`cnpj`)
+    REFERENCES `FarmaciaTADS035N`.`Fornecedor` (`cnpj`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE)
 ENGINE = InnoDB
@@ -84,9 +84,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `FarmarciaTADS035N`.`Funcionario`
+-- Table `FarmaciaTADS035N`.`Funcionario`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`Funcionario` (
+CREATE TABLE IF NOT EXISTS `FarmaciaTADS035N`.`Funcionario` (
   `cpf` VARCHAR(14) NOT NULL,
   `nome` VARCHAR(60) NOT NULL,
   `nomeSocial` VARCHAR(45) NULL,
@@ -107,9 +107,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `FarmarciaTADS035N`.`Departamento`
+-- Table `FarmaciaTADS035N`.`Departamento`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`Departamento` (
+CREATE TABLE IF NOT EXISTS `FarmaciaTADS035N`.`Departamento` (
   `idDepartamento` INT(11) NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(45) NOT NULL,
   `local` VARCHAR(45) NOT NULL,
@@ -120,7 +120,7 @@ CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`Departamento` (
   INDEX `fk_Departamento_Funcionario1_idx` (`Gerente_cpf` ASC) VISIBLE,
   CONSTRAINT `fk_Departamento_Funcionario1`
     FOREIGN KEY (`Gerente_cpf`)
-    REFERENCES `FarmarciaTADS035N`.`Funcionario` (`cpf`)
+    REFERENCES `FarmaciaTADS035N`.`Funcionario` (`cpf`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE)
 ENGINE = InnoDB
@@ -128,9 +128,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `FarmarciaTADS035N`.`Dependente`
+-- Table `FarmaciaTADS035N`.`Dependente`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`Dependente` (
+CREATE TABLE IF NOT EXISTS `FarmaciaTADS035N`.`Dependente` (
   `cpf` VARCHAR(14) NOT NULL,
   `nome` VARCHAR(60) NOT NULL,
   `parentesco` VARCHAR(15) NOT NULL,
@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`Dependente` (
   INDEX `fk_Dependente_Funcionario1_idx` (`Funcionario_cpf` ASC) VISIBLE,
   CONSTRAINT `fk_Dependente_Funcionario1`
     FOREIGN KEY (`Funcionario_cpf`)
-    REFERENCES `FarmarciaTADS035N`.`Funcionario` (`cpf`)
+    REFERENCES `FarmaciaTADS035N`.`Funcionario` (`cpf`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
@@ -148,9 +148,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `FarmarciaTADS035N`.`Despesa`
+-- Table `FarmaciaTADS035N`.`Despesa`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`Despesa` (
+CREATE TABLE IF NOT EXISTS `FarmaciaTADS035N`.`Despesa` (
   `idDespesa` INT(11) NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(45) NOT NULL,
   `valor` DECIMAL(6,2) UNSIGNED ZEROFILL NOT NULL,
@@ -162,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`Despesa` (
   INDEX `fk_Despesa_Compras1_idx` (`Compras_idCompras` ASC) VISIBLE,
   CONSTRAINT `fk_Despesa_Compras1`
     FOREIGN KEY (`Compras_idCompras`)
-    REFERENCES `FarmarciaTADS035N`.`Compras` (`idCompras`)
+    REFERENCES `FarmaciaTADS035N`.`Compras` (`idCompras`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -170,9 +170,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `FarmarciaTADS035N`.`EnderecoCli`
+-- Table `FarmaciaTADS035N`.`EnderecoCli`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`EnderecoCli` (
+CREATE TABLE IF NOT EXISTS `FarmaciaTADS035N`.`EnderecoCli` (
   `Cliente_cpf` VARCHAR(14) NOT NULL,
   `uf` CHAR(2) NOT NULL,
   `cidade` VARCHAR(60) NOT NULL,
@@ -184,7 +184,7 @@ CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`EnderecoCli` (
   PRIMARY KEY (`Cliente_cpf`),
   CONSTRAINT `fk_EnderecoCli_Cliente1`
     FOREIGN KEY (`Cliente_cpf`)
-    REFERENCES `FarmarciaTADS035N`.`Cliente` (`cpf`)
+    REFERENCES `FarmaciaTADS035N`.`Cliente` (`cpf`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
@@ -192,9 +192,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `FarmarciaTADS035N`.`EnderecoFunc`
+-- Table `FarmaciaTADS035N`.`EnderecoFunc`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`EnderecoFunc` (
+CREATE TABLE IF NOT EXISTS `FarmaciaTADS035N`.`EnderecoFunc` (
   `Funcionario_cpf` VARCHAR(14) NOT NULL,
   `uf` CHAR(2) NOT NULL,
   `cidade` VARCHAR(60) NOT NULL,
@@ -207,7 +207,7 @@ CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`EnderecoFunc` (
   PRIMARY KEY (`Funcionario_cpf`),
   CONSTRAINT `fk_EnderecoFunc_Funcionario1`
     FOREIGN KEY (`Funcionario_cpf`)
-    REFERENCES `FarmarciaTADS035N`.`Funcionario` (`cpf`)
+    REFERENCES `FarmaciaTADS035N`.`Funcionario` (`cpf`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
@@ -215,9 +215,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `FarmarciaTADS035N`.`Ferias`
+-- Table `FarmaciaTADS035N`.`Ferias`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`Ferias` (
+CREATE TABLE IF NOT EXISTS `FarmaciaTADS035N`.`Ferias` (
   `idFerias` INT(11) NOT NULL AUTO_INCREMENT,
   `dataInicio` DATE NOT NULL,
   `dataFim` DATE NOT NULL,
@@ -228,7 +228,7 @@ CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`Ferias` (
   INDEX `fk_Ferias_Funcionario1_idx` (`Funcionario_cpf` ASC) VISIBLE,
   CONSTRAINT `fk_Ferias_Funcionario1`
     FOREIGN KEY (`Funcionario_cpf`)
-    REFERENCES `FarmarciaTADS035N`.`Funcionario` (`cpf`)
+    REFERENCES `FarmaciaTADS035N`.`Funcionario` (`cpf`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
@@ -236,9 +236,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `FarmarciaTADS035N`.`Venda`
+-- Table `FarmaciaTADS035N`.`Venda`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`Venda` (
+CREATE TABLE IF NOT EXISTS `FarmaciaTADS035N`.`Venda` (
   `idVenda` INT(11) NOT NULL AUTO_INCREMENT,
   `dataVenda` DATETIME NOT NULL,
   `valorTotal` DECIMAL(6,2) UNSIGNED ZEROFILL NOT NULL,
@@ -250,12 +250,12 @@ CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`Venda` (
   INDEX `fk_Venda_Cliente1_idx` (`Cliente_cpf` ASC) VISIBLE,
   CONSTRAINT `fk_Venda_Cliente1`
     FOREIGN KEY (`Cliente_cpf`)
-    REFERENCES `FarmarciaTADS035N`.`Cliente` (`cpf`)
+    REFERENCES `FarmaciaTADS035N`.`Cliente` (`cpf`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE,
   CONSTRAINT `fk_Venda_Funcionario1`
     FOREIGN KEY (`Funcionario_cpf`)
-    REFERENCES `FarmarciaTADS035N`.`Funcionario` (`cpf`)
+    REFERENCES `FarmaciaTADS035N`.`Funcionario` (`cpf`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE)
 ENGINE = InnoDB
@@ -263,9 +263,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `FarmarciaTADS035N`.`FormaPag`
+-- Table `FarmaciaTADS035N`.`FormaPag`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`FormaPag` (
+CREATE TABLE IF NOT EXISTS `FarmaciaTADS035N`.`FormaPag` (
   `idFormaPag` INT(11) NOT NULL AUTO_INCREMENT,
   `valorPago` DECIMAL(6,2) UNSIGNED ZEROFILL NOT NULL,
   `tipo` VARCHAR(45) NOT NULL,
@@ -275,7 +275,7 @@ CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`FormaPag` (
   INDEX `fk_FormaPag_Venda1_idx` (`Venda_idVenda` ASC) VISIBLE,
   CONSTRAINT `fk_FormaPag_Venda1`
     FOREIGN KEY (`Venda_idVenda`)
-    REFERENCES `FarmarciaTADS035N`.`Venda` (`idVenda`)
+    REFERENCES `FarmaciaTADS035N`.`Venda` (`idVenda`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -283,9 +283,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `FarmarciaTADS035N`.`Produto`
+-- Table `FarmaciaTADS035N`.`Produto`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`Produto` (
+CREATE TABLE IF NOT EXISTS `FarmaciaTADS035N`.`Produto` (
   `idProduto` INT(11) NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(45) NOT NULL,
   `valor` DECIMAL(6,2) UNSIGNED ZEROFILL NOT NULL,
@@ -298,9 +298,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `FarmarciaTADS035N`.`ItensCompra`
+-- Table `FarmaciaTADS035N`.`ItensCompra`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`ItensCompra` (
+CREATE TABLE IF NOT EXISTS `FarmaciaTADS035N`.`ItensCompra` (
   `Produto_idProduto` INT(11) NOT NULL,
   `Compras_idCompras` INT(11) NOT NULL,
   `quantidade` INT(11) NOT NULL,
@@ -310,12 +310,12 @@ CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`ItensCompra` (
   INDEX `fk_Produto_has_Compras_Produto1_idx` (`Produto_idProduto` ASC) VISIBLE,
   CONSTRAINT `fk_Produto_has_Compras_Compras1`
     FOREIGN KEY (`Compras_idCompras`)
-    REFERENCES `FarmarciaTADS035N`.`Compras` (`idCompras`)
+    REFERENCES `FarmaciaTADS035N`.`Compras` (`idCompras`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Produto_has_Compras_Produto1`
     FOREIGN KEY (`Produto_idProduto`)
-    REFERENCES `FarmarciaTADS035N`.`Produto` (`idProduto`)
+    REFERENCES `FarmaciaTADS035N`.`Produto` (`idProduto`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -323,9 +323,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `FarmarciaTADS035N`.`ItensVendaProd`
+-- Table `FarmaciaTADS035N`.`ItensVendaProd`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`ItensVendaProd` (
+CREATE TABLE IF NOT EXISTS `FarmaciaTADS035N`.`ItensVendaProd` (
   `Venda_idVenda` INT(11) NOT NULL,
   `Produto_idProduto` INT(11) NOT NULL,
   `valorDeVenda` DECIMAL(6,2) NOT NULL,
@@ -336,12 +336,12 @@ CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`ItensVendaProd` (
   INDEX `fk_Venda_has_Produto_Venda1_idx` (`Venda_idVenda` ASC) VISIBLE,
   CONSTRAINT `fk_Venda_has_Produto_Produto1`
     FOREIGN KEY (`Produto_idProduto`)
-    REFERENCES `FarmarciaTADS035N`.`Produto` (`idProduto`)
+    REFERENCES `FarmaciaTADS035N`.`Produto` (`idProduto`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Venda_has_Produto_Venda1`
     FOREIGN KEY (`Venda_idVenda`)
-    REFERENCES `FarmarciaTADS035N`.`Venda` (`idVenda`)
+    REFERENCES `FarmaciaTADS035N`.`Venda` (`idVenda`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -349,9 +349,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `FarmarciaTADS035N`.`Servico`
+-- Table `FarmaciaTADS035N`.`Servico`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`Servico` (
+CREATE TABLE IF NOT EXISTS `FarmaciaTADS035N`.`Servico` (
   `idServico` INT(11) NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(45) NOT NULL,
   `valor` DECIMAL(6,2) UNSIGNED ZEROFILL NOT NULL,
@@ -361,9 +361,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `FarmarciaTADS035N`.`ItensVendaServico`
+-- Table `FarmaciaTADS035N`.`ItensVendaServico`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`ItensVendaServico` (
+CREATE TABLE IF NOT EXISTS `FarmaciaTADS035N`.`ItensVendaServico` (
   `Funcionario_cpf` VARCHAR(14) NOT NULL,
   `Venda_idVenda` INT(11) NOT NULL,
   `Servico_idServico` INT(11) NOT NULL,
@@ -375,17 +375,17 @@ CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`ItensVendaServico` (
   INDEX `fk_ItensVendaServico_Servico1_idx` (`Servico_idServico` ASC) VISIBLE,
   CONSTRAINT `fk_ItensVendaServico_Funcionario1`
     FOREIGN KEY (`Funcionario_cpf`)
-    REFERENCES `FarmarciaTADS035N`.`Funcionario` (`cpf`)
+    REFERENCES `FarmaciaTADS035N`.`Funcionario` (`cpf`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_ItensVendaServico_Servico1`
     FOREIGN KEY (`Servico_idServico`)
-    REFERENCES `FarmarciaTADS035N`.`Servico` (`idServico`)
+    REFERENCES `FarmaciaTADS035N`.`Servico` (`idServico`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_ItensVendaServico_Venda1`
     FOREIGN KEY (`Venda_idVenda`)
-    REFERENCES `FarmarciaTADS035N`.`Venda` (`idVenda`)
+    REFERENCES `FarmaciaTADS035N`.`Venda` (`idVenda`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -393,9 +393,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `FarmarciaTADS035N`.`PlanoSaude`
+-- Table `FarmaciaTADS035N`.`PlanoSaude`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`PlanoSaude` (
+CREATE TABLE IF NOT EXISTS `FarmaciaTADS035N`.`PlanoSaude` (
   `Cliente_cpf` VARCHAR(14) NOT NULL,
   `numero` VARCHAR(45) NOT NULL,
   `nome` VARCHAR(45) NOT NULL,
@@ -403,7 +403,7 @@ CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`PlanoSaude` (
   PRIMARY KEY (`Cliente_cpf`),
   CONSTRAINT `fk_PlanoSaude_Cliente1`
     FOREIGN KEY (`Cliente_cpf`)
-    REFERENCES `FarmarciaTADS035N`.`Cliente` (`cpf`)
+    REFERENCES `FarmaciaTADS035N`.`Cliente` (`cpf`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
@@ -411,9 +411,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `FarmarciaTADS035N`.`ReceitasMedica`
+-- Table `FarmaciaTADS035N`.`ReceitasMedica`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`ReceitasMedica` (
+CREATE TABLE IF NOT EXISTS `FarmaciaTADS035N`.`ReceitasMedica` (
   `idReceitas` INT(11) NOT NULL,
   `descricao` VARCHAR(140) NOT NULL,
   `arquivoReceita` BLOB NULL DEFAULT NULL,
@@ -422,7 +422,7 @@ CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`ReceitasMedica` (
   INDEX `fk_ReceitasMedica_Venda1_idx` (`Venda_idVenda` ASC) VISIBLE,
   CONSTRAINT `fk_ReceitasMedica_Venda1`
     FOREIGN KEY (`Venda_idVenda`)
-    REFERENCES `FarmarciaTADS035N`.`Venda` (`idVenda`)
+    REFERENCES `FarmaciaTADS035N`.`Venda` (`idVenda`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -430,9 +430,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `FarmarciaTADS035N`.`Telefone`
+-- Table `FarmaciaTADS035N`.`Telefone`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`Telefone` (
+CREATE TABLE IF NOT EXISTS `FarmaciaTADS035N`.`Telefone` (
   `idTelefone` INT(11) NOT NULL AUTO_INCREMENT,
   `numero` VARCHAR(15) NOT NULL,
   `Funcionario_cpf` VARCHAR(14) NULL DEFAULT NULL,
@@ -445,17 +445,17 @@ CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`Telefone` (
   UNIQUE INDEX `numero_UNIQUE` (`numero` ASC) VISIBLE,
   CONSTRAINT `fk_Telefone_Departamento1`
     FOREIGN KEY (`Departamento_idDepartamento`)
-    REFERENCES `FarmarciaTADS035N`.`Departamento` (`idDepartamento`)
+    REFERENCES `FarmaciaTADS035N`.`Departamento` (`idDepartamento`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Telefone_Fornecedor1`
     FOREIGN KEY (`Fornecedor_cnpj`)
-    REFERENCES `FarmarciaTADS035N`.`Fornecedor` (`cnpj`)
+    REFERENCES `FarmaciaTADS035N`.`Fornecedor` (`cnpj`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_Telefone_Funcionario1`
     FOREIGN KEY (`Funcionario_cpf`)
-    REFERENCES `FarmarciaTADS035N`.`Funcionario` (`cpf`)
+    REFERENCES `FarmaciaTADS035N`.`Funcionario` (`cpf`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
@@ -463,9 +463,9 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `FarmarciaTADS035N`.`Trabalhar`
+-- Table `FarmaciaTADS035N`.`Trabalhar`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`Trabalhar` (
+CREATE TABLE IF NOT EXISTS `FarmaciaTADS035N`.`Trabalhar` (
   `Funcionario_cpf` VARCHAR(14) NOT NULL,
   `Cargo_cbo` INT(11) NOT NULL,
   `Departamento_idDepartamento` INT(11) NOT NULL,
@@ -475,17 +475,17 @@ CREATE TABLE IF NOT EXISTS `FarmarciaTADS035N`.`Trabalhar` (
   INDEX `fk_Funcionario_has_Cargo_Departamento1_idx` (`Departamento_idDepartamento` ASC) VISIBLE,
   CONSTRAINT `fk_Funcionario_has_Cargo_Funcionario1`
     FOREIGN KEY (`Funcionario_cpf`)
-    REFERENCES `FarmarciaTADS035N`.`Funcionario` (`cpf`)
+    REFERENCES `FarmaciaTADS035N`.`Funcionario` (`cpf`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_Funcionario_has_Cargo_Cargo1`
     FOREIGN KEY (`Cargo_cbo`)
-    REFERENCES `FarmarciaTADS035N`.`Cargo` (`cbo`)
+    REFERENCES `FarmaciaTADS035N`.`Cargo` (`cbo`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_Funcionario_has_Cargo_Departamento1`
     FOREIGN KEY (`Departamento_idDepartamento`)
-    REFERENCES `FarmarciaTADS035N`.`Departamento` (`idDepartamento`)
+    REFERENCES `FarmaciaTADS035N`.`Departamento` (`idDepartamento`)
     ON DELETE CASCADE
     ON UPDATE RESTRICT)
 ENGINE = InnoDB
