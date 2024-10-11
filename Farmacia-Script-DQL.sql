@@ -218,6 +218,7 @@ select cpf as "CPF", upper(nome) "Funcionário", sexo "Gênero",
     from funcionario, enderecofunc
 		where cpf = Funcionario_cpf
 			order by nome; 
+            
 -- Inner join explicito            
 select cpf as "CPF", upper(nome) "Funcionário", sexo "Gênero", 
 	estadoCivil "Estado Civil", 
@@ -231,3 +232,35 @@ select cpf as "CPF", upper(nome) "Funcionário", sexo "Gênero",
 		inner join enderecofunc on cpf = Funcionario_cpf
 			where cidade like "olinda"
 			order by nome; 
+
+select dep.cpf "CPF do Dependente", dep.nome "Dependente", 
+	date_format(dep.dataNasc, '%d/%m/%Y') "Data de Nascimento do Dependente",
+    dep.parentesco "Parentesco",  func.nome "Reponsável"
+		from dependente dep
+			inner join funcionario func 
+							on func.cpf = dep.Funcionario_cpf
+				order by func.nome;
+
+select date_format(fer.dataInicio, '%d/%m/%Y') "Data Início",
+	date_format(fer.dataFim, '%d/%m/%Y') "Data Fim",
+    fer.qtdDias "Quantidade de Dias", fer.anoRef "Ano de Aquisição",
+    func.nome "Funcionário"
+    from ferias fer
+		inner join funcionario func on func.cpf = fer.Funcionario_cpf
+			order by func.nome;
+
+select func.cpf "CPF", func.nome "Funcionario",
+	count(dep.cpf) "Quantidade de Dependentes"
+	from funcionario func
+		inner join dependente dep on dep.Funcionario_cpf = func.cpf
+			group by func.cpf
+				order by func.nome;
+
+select func.cpf "CPF", func.nome "Funcionario",
+	count(dep.cpf) "Quantidade de Dependentes"
+	from funcionario func
+		left join dependente dep on dep.Funcionario_cpf = func.cpf
+			group by func.cpf
+				order by func.nome;
+
+
