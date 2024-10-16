@@ -325,7 +325,8 @@ select func.cpf as "CPF", upper(func.nome) "Funcionário", func.sexo "Gênero",
 select dep.nome "Departamento", count(trb.Funcionario_cpf) "Qtd Funcionários",
 	concat("R$ ", format(sum(func.salario + func.comissao), 2, 'de_DE')) "Investimento Salarial + Comissão",
     concat("R$ ", format(avg(func.salario), 2, 'de_DE')) "Média Salarial", 
-    concat("R$ ", format(avg(func.comissao), 2, 'de_DE')) "Média Comissão", coalesce(grt.nome, "Não tem") "Gerente"
+    concat("R$ ", format(avg(func.comissao), 2, 'de_DE')) "Média Comissão", 
+    coalesce(grt.nome, "Não tem") "Gerente"
 	from departamento dep
 		inner join trabalhar trb on trb.Departamento_idDepartamento = dep.idDepartamento
         inner join funcionario func on func.cpf = trb.Funcionario_cpf
@@ -333,8 +334,84 @@ select dep.nome "Departamento", count(trb.Funcionario_cpf) "Qtd Funcionários",
 			group by trb.Departamento_idDepartamento
 				order by dep.nome;
 
+-- pix para: 81999985671 
 
+select date_format(vnd.dataVenda, "%d/%m/%Y - %h:%i") "Data da Venda",
+	concat("R$ ", format(vnd.valorTotal, 2, 'de_DE')) "Valor Total",
+    cli.nome "Cliente",
+    func.nome "Funcionario"
+	from venda vnd
+		inner join cliente cli on cli.cpf = vnd.Cliente_cpf
+        inner join funcionario func on func.cpf = vnd.Funcionario_cpf
+			order by vnd.dataVenda;
+            
+select date_format(vnd.dataVenda, "%d/%m/%Y - %h:%i") "Data da Venda",
+	concat("R$ ", format(vnd.valorTotal, 2, 'de_DE')) "Valor Total",
+    cli.nome "Cliente",
+    func.nome "Funcionario"
+	from venda vnd
+		inner join cliente cli on cli.cpf = vnd.Cliente_cpf
+        inner join funcionario func on func.cpf = vnd.Funcionario_cpf
+			where vnd.dataVenda between '2021-04-01' and '2021-06-30'
+				order by vnd.dataVenda;   
+   
+select year(dataVenda) "Periodo" , 
+	count(idVenda) "Quantidade de Vendas", 
+	concat("R$ ", format(sum(valorTotal-coalesce(desconto, 0)), 2, 'de_DE')) "Balanço" 
+	from venda
+		where year(dataVenda) = 2021
+			group by year(dataVenda);
 
-            
-            
-            
+select date_format(dataVenda, "%m/%Y") "Periodo" , 
+	count(idVenda) "Quantidade de Vendas", 
+	concat("R$ ", format(sum(valorTotal-coalesce(desconto, 0)), 2, 'de_DE')) "Balanço" 
+	from venda
+		where year(dataVenda) = 2021
+			group by date_format(dataVenda, "%m/%Y");
+
+select date_format(dataVenda, "%m/%Y") "Periodo" , 
+	count(idVenda) "Quantidade de Vendas", 
+	concat("R$ ", format(sum(valorTotal-coalesce(desconto, 0)), 2, 'de_DE')) "Balanço" 
+	from venda
+		group by date_format(dataVenda, "%m/%Y")
+			order by sum(valorTotal-coalesce(desconto, 0)) desc;
+   
+select upper(tipo) "Forma de Pagamento", count(idFormaPag) "Quantidade de Vendas", 
+	sum(valorPago) "Faturamento" 
+	from formapag
+		group by tipo
+			order by sum(valorPago) desc;   
+
+select coalesce(endC.cidade, "Não informada") "Cidade", count(idVenda) "Quantidade",
+	concat("R$ ", format(sum(valorTotal-coalesce(desconto, 0)), 2, 'de_DE')) "Faturamento"
+	from venda vnd
+		inner join cliente cli on cli.cpf = vnd.Cliente_cpf
+		left join enderecocli endC on endC.Cliente_cpf = cli.cpf
+			group by endC.cidade
+				order by sum(valorTotal-coalesce(desconto, 0));
+
+select coalesce(endC.cidade, "Não informada") "Cidade", 
+	coalesce(endC.bairro, "Não informada") "Bairro",
+    count(idVenda) "Quantidade",
+	concat("R$ ", format(sum(valorTotal-coalesce(desconto, 0)), 2, 'de_DE')) "Faturamento"
+	from venda vnd
+		inner join cliente cli on cli.cpf = vnd.Cliente_cpf
+		left join enderecocli endC on endC.Cliente_cpf = cli.cpf
+			group by endC.cidade, endC.bairro
+				order by sum(valorTotal-coalesce(desconto, 0)) desc;
+
+create view RelatorioBairro as
+	select coalesce(endC.cidade, "Não informada") "Cidade", 
+		coalesce(endC.bairro, "Não informada") "Bairro",
+		count(idVenda) "Quantidade",
+		concat("R$ ", format(sum(valorTotal-coalesce(desconto, 0)), 2, 'de_DE')) "Faturamento"
+		from venda vnd
+			inner join cliente cli on cli.cpf = vnd.Cliente_cpf
+			left join enderecocli endC on endC.Cliente_cpf = cli.cpf
+				group by endC.cidade, endC.bairro
+					order by sum(valorTotal-coalesce(desconto, 0)) desc;
+                    
+select * from relatoriobairro;
+
+select * from relatoriobairro
+	where Cidade like "Recife";
