@@ -415,3 +415,41 @@ select * from relatoriobairro;
 
 select * from relatoriobairro
 	where Cidade like "Recife";
+    
+select prod.nome "Produto", count(ivp.Venda_idVenda) "Frequência em venda",
+	sum(ivp.quantidade) "Quantidade vendida",
+	sum(ivp.valorDeVenda*ivp.quantidade) "Faturamento"
+	from itensvendaprod ivp
+		inner join produto prod on prod.idProduto = ivp.Produto_idProduto
+			group by ivp.Produto_idProduto
+				order by count(ivp.Venda_idVenda) desc;
+                
+select prod.nome "Produto", count(ivp.Venda_idVenda) "Frequência em venda",
+	sum(ivp.quantidade) "Quantidade vendida",
+	sum(ivp.valorDeVenda*ivp.quantidade) "Faturamento"
+	from itensvendaprod ivp
+		inner join produto prod on prod.idProduto = ivp.Produto_idProduto
+			group by ivp.Produto_idProduto
+				order by sum(ivp.quantidade) desc;
+                
+select srv.nome "Serviço", count(ivs.Venda_idVenda) "Frequência em venda",
+	sum(ivs.quantidade) "Quantidade vendida",
+	sum(ivs.valorVenda*ivs.quantidade) "Faturamento"
+	from itensvendaservico ivs
+		inner join servico srv on srv.idServico = ivs.Servico_idServico
+			group by ivs.Servico_idServico
+				order by sum(ivs.valorVenda*ivs.quantidade) desc
+					limit 10;
+            
+
+
+
+
+
+
+
+
+
+
+
+
