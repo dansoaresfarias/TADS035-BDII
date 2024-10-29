@@ -441,15 +441,99 @@ select srv.nome "Serviço", count(ivs.Venda_idVenda) "Frequência em venda",
 				order by sum(ivs.valorVenda*ivs.quantidade) desc
 					limit 10;
             
+-- "CPF", "Funcionario", "Cargo", "Departamento", "Salario", "Comissao"
+-- "Aux Escola", "Aux Saude", "Vale Alimentacao", "Vale Transporte", "Salario Bruto"
 
+select func.cpf "CPF", func.nome "Funcionário", crg.nome "Cargo", 
+	dep.nome "Departamento",
+	concat("R$ ", format(func.salario, 2, 'de_DE')) "Salário",
+    concat("R$ ", format(func.comissao, 2, 'de_DE')) "Comissão"
+	from funcionario func
+    inner join trabalhar trab on trab.Funcionario_cpf = func.cpf
+    inner join cargo crg on crg.cbo = trab.Cargo_cbo
+    inner join departamento dep on dep.idDepartamento = trab.Departamento_idDepartamento
+		order by func.nome;
 
+select func.cpf "cpf", func.nome "funcionario", 
+	count(dep.cpf)*180 "auxEscola"
+		from funcionario func
+        left join dependente dep on dep.funcionario_cpf = func.cpf
+			where timestampdiff(year, dep.dataNasc, now()) < 6
+				group by func.cpf
+					order by func.nome;
 
+select nome, timestampdiff(year, dataNasc, now()) "Idade" from dependente;
 
+create view vAuxEscola as
+	select func.cpf "cpf", func.nome "funcionario", 
+	count(dep.cpf)*180 "auxEscola"
+		from funcionario func
+        left join dependente dep on dep.funcionario_cpf = func.cpf
+			where timestampdiff(year, dep.dataNasc, now()) < 6
+				group by func.cpf
+					order by func.nome;
 
+-- "CPF", "Funcionario", "Cargo", "Departamento", "Salario", "Comissao"
+-- "Aux Escola", "Aux Saude", "Vale Alimentacao", "Vale Transporte", "Salario Bruto"
+select func.cpf "CPF", func.nome "Funcionário", crg.nome "Cargo", 
+	dep.nome "Departamento",
+	concat("R$ ", format(func.salario, 2, 'de_DE')) "Salário",
+    concat("R$ ", format(func.comissao, 2, 'de_DE')) "Comissão",
+    concat("R$ ", format(coalesce(vae.auxEscola, 0), 2, 'de_DE')) "Auxílio Escola"
+	from funcionario func
+    inner join trabalhar trab on trab.Funcionario_cpf = func.cpf
+    inner join cargo crg on crg.cbo = trab.Cargo_cbo
+    inner join departamento dep on dep.idDepartamento = trab.Departamento_idDepartamento
+    left join vauxescola vae on vae.cpf = func.cpf
+		order by func.nome;
 
+select cpf "cpf", nome "funcionario", 
+	timestampdiff(year, dataNasc, now()) "idade",
+    case 
+		when timestampdiff(year, dataNasc, now()) <= 25 
+			then 250
+		when timestampdiff(year, dataNasc, now()) between 26 and 35
+			then 350
+		when timestampdiff(year, dataNasc, now()) between 36 and 45
+			then 450
+		when timestampdiff(year, dataNasc, now()) between 46 and 55
+			then 550
+		when timestampdiff(year, dataNasc, now()) >= 56
+			then 650
+		end "auxSaude"    
+		from funcionario
+			order by nome;
 
+create view vauxSaude as
+	select cpf "cpf", nome "funcionario", 
+		timestampdiff(year, dataNasc, now()) "idade",
+		case 
+			when timestampdiff(year, dataNasc, now()) <= 25 
+				then 250
+			when timestampdiff(year, dataNasc, now()) between 26 and 35
+				then 350
+			when timestampdiff(year, dataNasc, now()) between 36 and 45
+				then 450
+			when timestampdiff(year, dataNasc, now()) between 46 and 55
+				then 550
+			when timestampdiff(year, dataNasc, now()) >= 56
+				then 650
+			end "auxSaude"    
+			from funcionario
+				order by nome;
 
-
-
-
-
+-- "CPF", "Funcionario", "Cargo", "Departamento", "Salario", "Comissao"
+-- "Aux Escola", "Aux Saude", "Vale Alimentacao", "Vale Transporte", "Salario Bruto"
+select func.cpf "CPF", func.nome "Funcionário", crg.nome "Cargo", 
+	dep.nome "Departamento",
+	concat("R$ ", format(func.salario, 2, 'de_DE')) "Salário",
+    concat("R$ ", format(func.comissao, 2, 'de_DE')) "Comissão",
+    concat("R$ ", format(coalesce(vae.auxEscola, 0), 2, 'de_DE')) "Auxílio Escola",
+    concat("R$ ", format(vas.auxSaude, 2, 'de_DE')) "Auxílio Saúde"
+	from funcionario func
+    inner join trabalhar trab on trab.Funcionario_cpf = func.cpf
+    inner join cargo crg on crg.cbo = trab.Cargo_cbo
+    inner join departamento dep on dep.idDepartamento = trab.Departamento_idDepartamento
+    left join vauxescola vae on vae.cpf = func.cpf
+    inner join vauxsaude vas on vas.cpf = func.cpf
+		order by func.nome;
