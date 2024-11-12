@@ -443,7 +443,6 @@ select srv.nome "Serviço", count(ivs.Venda_idVenda) "Frequência em venda",
             
 -- "CPF", "Funcionario", "Cargo", "Departamento", "Salario", "Comissao"
 -- "Aux Escola", "Aux Saude", "Vale Alimentacao", "Vale Transporte", "Salario Bruto"
-
 select func.cpf "CPF", func.nome "Funcionário", crg.nome "Cargo", 
 	dep.nome "Departamento",
 	concat("R$ ", format(func.salario, 2, 'de_DE')) "Salário",
@@ -473,17 +472,13 @@ create view vAuxEscola as
 				group by func.cpf
 					order by func.nome;
 
--- "CPF", "Funcionario", "Cargo", "Departamento", "Salario", "Comissao"
--- "Aux Escola", "Aux Saude", "Vale Alimentacao", "Vale Transporte", "Salario Bruto"
-select func.cpf "CPF", func.nome "Funcionário", crg.nome "Cargo", 
-	dep.nome "Departamento",
-	concat("R$ ", format(func.salario, 2, 'de_DE')) "Salário",
+-- "CPF", "Funcionario", "Salario Bruto", "Comissao"
+-- "Aux Escola", "Aux Saude", "Vale Alimentacao", "IRRF", "INSS", "Salario Líquido"
+select func.cpf "CPF", func.nome "Funcionário",
+	concat("R$ ", format(func.salario, 2, 'de_DE')) "Salário Bruto",
     concat("R$ ", format(func.comissao, 2, 'de_DE')) "Comissão",
     concat("R$ ", format(coalesce(vae.auxEscola, 0), 2, 'de_DE')) "Auxílio Escola"
 	from funcionario func
-    inner join trabalhar trab on trab.Funcionario_cpf = func.cpf
-    inner join cargo crg on crg.cbo = trab.Cargo_cbo
-    inner join departamento dep on dep.idDepartamento = trab.Departamento_idDepartamento
     left join vauxescola vae on vae.cpf = func.cpf
 		order by func.nome;
 
@@ -498,8 +493,7 @@ select cpf "cpf", nome "funcionario",
 			then 450
 		when timestampdiff(year, dataNasc, now()) between 46 and 55
 			then 550
-		when timestampdiff(year, dataNasc, now()) >= 56
-			then 650
+		else 650
 		end "auxSaude"    
 		from funcionario
 			order by nome;
@@ -516,24 +510,76 @@ create view vauxSaude as
 				then 450
 			when timestampdiff(year, dataNasc, now()) between 46 and 55
 				then 550
-			when timestampdiff(year, dataNasc, now()) >= 56
-				then 650
+			else 650
 			end "auxSaude"    
 			from funcionario
 				order by nome;
 
--- "CPF", "Funcionario", "Cargo", "Departamento", "Salario", "Comissao"
--- "Aux Escola", "Aux Saude", "Vale Alimentacao", "Vale Transporte", "Salario Bruto"
-select func.cpf "CPF", func.nome "Funcionário", crg.nome "Cargo", 
-	dep.nome "Departamento",
-	concat("R$ ", format(func.salario, 2, 'de_DE')) "Salário",
+-- "CPF", "Funcionario", "Salario Bruto", "Comissao"
+-- "Aux Escola", "Aux Saude", "Vale Alimentacao", "IRRF", "INSS", "Salario Líquido"
+select func.cpf "CPF", func.nome "Funcionário",
+	concat("R$ ", format(func.salario, 2, 'de_DE')) "Salário Bruto",
     concat("R$ ", format(func.comissao, 2, 'de_DE')) "Comissão",
     concat("R$ ", format(coalesce(vae.auxEscola, 0), 2, 'de_DE')) "Auxílio Escola",
     concat("R$ ", format(vas.auxSaude, 2, 'de_DE')) "Auxílio Saúde"
 	from funcionario func
-    inner join trabalhar trab on trab.Funcionario_cpf = func.cpf
-    inner join cargo crg on crg.cbo = trab.Cargo_cbo
-    inner join departamento dep on dep.idDepartamento = trab.Departamento_idDepartamento
     left join vauxescola vae on vae.cpf = func.cpf
     inner join vauxsaude vas on vas.cpf = func.cpf
 		order by func.nome;
+
+-- "CPF", "Funcionario", "Salario Bruto", "Comissao"
+-- "Aux Escola", "Aux Saude", "Vale Alimentacao", "INSS", "IRRF", "Salario Líquido"
+select func.cpf "CPF", func.nome "Funcionário",
+	concat("R$ ", format(func.salario, 2, 'de_DE')) "Salário Bruto",
+    concat("R$ ", format(func.comissao, 2, 'de_DE')) "Comissão",
+    concat("R$ ", format(coalesce(vae.auxEscola, 0), 2, 'de_DE')) "Auxílio Escola",
+    concat("R$ ", format(vas.auxSaude, 2, 'de_DE')) "Auxílio Saúde",
+    concat("R$ ", format(550, 2, 'de_DE')) "Vale Alimentação"
+	from funcionario func
+    left join vauxescola vae on vae.cpf = func.cpf
+    inner join vauxsaude vas on vas.cpf = func.cpf
+		order by func.nome;
+        
+-- Criando a função do INSS
+delimiter $$
+create function calcINSS(sb decimal(7,2))
+	returns decimal(6,2) deterministic
+	begin
+		declare inss decimal(6,2) default 0.0;
+        
+        if (sb <= 1412.00) 
+			then set inss = sb * 0.075;
+		elseif (sb >= 1412.01 and sb <= 2666.68) 
+			then set inss = sb * 0.09;
+		elseif (sb >= 2666.69 and sb <= 4000.03) 
+			then set inss = sb * 0.12;
+		elseif (sb >= 4000.04 and sb <= 7786.02) 
+			then set inss = sb * 0.14;
+		else set inss = 7786.02 * 0.14;
+		end if;
+        
+        return inss;
+    end $$
+delimiter ;
+
+-- "CPF", "Funcionario", "Salario Bruto", "Comissao"
+-- "Aux Escola", "Aux Saude", "Vale Alimentacao", "INSS", "IRRF", "Salario Líquido"
+select func.cpf "CPF", func.nome "Funcionário",
+	concat("R$ ", format(func.salario, 2, 'de_DE')) "Salário Bruto",
+    concat("R$ ", format(func.comissao, 2, 'de_DE')) "Comissão",
+    concat("R$ ", format(coalesce(vae.auxEscola, 0), 2, 'de_DE')) "Auxílio Escola",
+    concat("R$ ", format(vas.auxSaude, 2, 'de_DE')) "Auxílio Saúde",
+    concat("R$ ", format(550, 2, 'de_DE')) "Vale Alimentação",
+    concat("-R$ ", format(calcINSS(func.salario), 2, 'de_DE')) "INSS"
+	from funcionario func
+    left join vauxescola vae on vae.cpf = func.cpf
+    inner join vauxsaude vas on vas.cpf = func.cpf
+		order by func.nome;
+
+
+
+
+
+
+
+
