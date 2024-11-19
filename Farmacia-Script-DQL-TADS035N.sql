@@ -576,9 +576,42 @@ select func.cpf "CPF", func.nome "Funcionário",
     inner join vauxsaude vas on vas.cpf = func.cpf
 		order by func.nome;
 
+-- Criando a função do IRRF
+delimiter $$
+create function calcIRRF(sb decimal(7,2))
+	returns decimal(6,2) deterministic
+	begin
+		declare irrf decimal(6,2) default 0.0;
+        if sb >= 2259.21 and sb <= 2826.65
+			then set irrf = sb * 0.075;
+		elseif sb >= 2826.66 and sb <= 3751.05
+			then set irrf = sb * 0.15;
+		elseif sb >= 3751.06 and sb <= 4664.68
+			then set irrf = sb * 0.225;
+		elseif sb >= 4664.69
+			then set irrf = sb * 0.275;
+		end if;
+        return irrf;
+    end $$
+delimiter ;
 
-
-
+-- "CPF", "Funcionario", "Salario Bruto", "Comissao"
+-- "Aux Escola", "Aux Saude", "Vale Alimentacao", "INSS", "IRRF", "Salario Líquido"
+select func.cpf "CPF", func.nome "Funcionário",
+	concat("R$ ", format(func.salario, 2, 'de_DE')) "Salário Bruto",
+    concat("R$ ", format(func.comissao, 2, 'de_DE')) "Comissão",
+    concat("R$ ", format(coalesce(vae.auxEscola, 0), 2, 'de_DE')) "Auxílio Escola",
+    concat("R$ ", format(vas.auxSaude, 2, 'de_DE')) "Auxílio Saúde",
+    concat("R$ ", format(550, 2, 'de_DE')) "Vale Alimentação",
+    concat("-R$ ", format(calcINSS(func.salario), 2, 'de_DE')) "INSS",
+    concat("-R$ ", format(calcIRRF(func.salario), 2, 'de_DE')) "IRRF",
+    concat("R$ ", format(func.salario + func.comissao + coalesce(vae.auxEscola, 0) 
+    + vas.auxSaude + 550 - calcINSS(func.salario) - 
+    calcIRRF(func.salario), 2, 'de_DE'))  "Salário Líquido"
+	from funcionario func
+    left join vauxescola vae on vae.cpf = func.cpf
+    inner join vauxsaude vas on vas.cpf = func.cpf
+		order by func.nome;
 
 
 
