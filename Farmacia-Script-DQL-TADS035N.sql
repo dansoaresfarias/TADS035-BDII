@@ -613,6 +613,82 @@ select func.cpf "CPF", func.nome "Funcionário",
     inner join vauxsaude vas on vas.cpf = func.cpf
 		order by func.nome;
 
+delimiter $$
+create procedure calcPrecoFinal(in precoComp decimal(6,2), 
+								out precoFinal decimal(6,2))
+		set precoFinal = precoComp + precoComp * 0.60 + 
+						precoComp * 0.37  + precoComp * 0.3058; 
+		$$
+delimiter ;
+
+
+call calcPrecoFinal(5, @precoDip);
+
+select @precoDip;
+
+delimiter $$
+create procedure calcPrecoFinal2(inout preco decimal(6,2))
+		set preco = preco + preco * 0.60 + 
+						preco * 0.37  + preco * 0.3058; 
+		$$
+delimiter ;
+
+set @precoTadala = 9;
+
+call calcPrecoFinal2(@precoTadala);
+
+select @precoTadala;
+
+delimiter $$
+create procedure cadFuncionario(in pcpf varchar(14),
+								in pnome varchar(60), 
+								in pnomeSocial varchar(45),
+								in pemail varchar(45), 
+								in psexo char(1), 
+								in pestadoCivil varchar(15), 
+								in pdataNasc date, 
+								in pch int, 
+								in psalario decimal(7,2),
+								in pcomissao decimal(6,2), 
+								in pdataAdm datetime,
+								in puf char(2), 
+								in pcidade varchar(60), 
+								in pbairro varchar(60), 
+								in prua varchar(70), 
+								in pnumero int, 
+								in pcomp varchar(45), 
+								in pcep varchar(9),
+								in nNumTel1 varchar(15),
+								in nNumTel2 varchar(15),
+								in nNumTel3 varchar(15))
+	begin
+		insert into funcionario (cpf, nome, nomeSocial, email, sexo, estadoCivil,
+			dataNasc, ch, salario, comissao, dataAdm)
+			value (pcpf, pnome, pnomeSocial, pemail, psexo, pestadoCivil,
+			pdataNasc, pch, psalario, pcomissao, pdataAdm);
+		insert into enderecofunc
+			value (pcpf, puf, pcidade, pbairro, prua, pnumero, pcomp, pcep);
+		insert into telefone (numero, Funcionario_cpf)
+			value (nNumTel1, pcpf);
+		if(nNumTel2 is not null) 
+			then insert into telefone (numero, Funcionario_cpf)
+					value (nNumTel2, pcpf);
+		end if;
+        if(nNumTel3 is not null) 
+			then insert into telefone (numero, Funcionario_cpf)
+					value (nNumTel3, pcpf);
+		end if;
+    end $$
+delimiter ;
+
+call cadFuncionario("708.888.777-00", "Marcela Alves", "Belarmino", "mab@uol.com",
+	'F', "Divorciada", '1998-11-20', 40, 4000, 500, '2024-11-25', "PE", "Recife",
+	"Campina do Barreto", "Rua Direita", 178, null, "50370-580", 
+    "(81)998562356", "(81)987456123", null);
+
+
+
+
 
 
 
