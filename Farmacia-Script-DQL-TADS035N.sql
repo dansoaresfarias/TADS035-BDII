@@ -686,6 +686,31 @@ call cadFuncionario("708.888.777-00", "Marcela Alves", "Belarmino", "mab@uol.com
 	"Campina do Barreto", "Rua Direita", 178, null, "50370-580", 
     "(81)998562356", "(81)987456123", null);
 
+delimiter $$
+create trigger trg_aft_insert_itensvendaprod after insert
+on itensvendaprod
+for each row
+	begin
+		update venda 
+			set valorTotal =  valorTotal + new.valordevenda * new.quantidade  - new.descontoProd
+				where idVenda = new.Venda_idVenda;
+		update produto
+			set quantidade = quantidade - new.quantidade
+				where idProduto = new.Produto_idProduto;
+    end $$
+delimiter ;
+
+drop trigger trg_aft_insert_itensvendaprod;
+
+insert into venda (datavenda, valortotal, desconto, Funcionario_cpf, Cliente_cpf)
+	value ('2024-12-02 21:34', 0.0, 0.0, "111.222.333-44", "012.345.678-90");
+
+insert into itensvendaprod
+	values (266, 7, 10, 1, 0.0),
+		(266, 8, 12, 7, 24.0),
+        (266, 9, 40, 2, 20.0);
+
+
 
 
 
